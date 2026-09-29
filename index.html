@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ThoughtShare</title>
+  <meta name="description" content="An anonymous notice board of thoughts. Every note is reviewed before it is pinned.">
+  <meta name="theme-color" content="#B98A5A">
+  <meta property="og:title" content="ThoughtShare">
+  <meta property="og:description" content="An anonymous notice board of thoughts.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="assets/img/pin.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Kalam:wght@300;400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#board">Skip to the board</a>
+
+  <header class="masthead">
+    <div class="masthead__inner">
+      <div class="brand">
+        <span class="brand__pin" aria-hidden="true"></span>
+        <div>
+          <h1 class="brand__title" id="site-title">ThoughtShare</h1>
+          <p class="brand__tagline" id="site-tagline"></p>
+        </div>
+      </div>
+      <button class="btn btn--primary" id="open-compose" type="button">
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>
+        Pin a thought
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="toolbar" aria-label="Filter and sort">
+      <div class="chips" id="chips" role="toolbar" aria-label="Categories"></div>
+      <div class="toolbar__right">
+        <label class="search">
+          <span class="visually-hidden">Search thoughts</span>
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input id="search" type="search" placeholder="Search the board" autocomplete="off">
+        </label>
+        <label class="select">
+          <span class="visually-hidden">Sort order</span>
+          <select id="sort">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="shuffle">Shuffle</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <p class="board-meta" id="board-meta" aria-live="polite"></p>
+
+    <section class="cork" id="board" aria-label="Notice board" tabindex="-1">
+      <div class="pinned" id="pinned" hidden>
+        <h2 class="section-label">Pinned by the moderator</h2>
+        <div class="notes notes--pinned" id="pinned-notes"></div>
+      </div>
+      <div class="notes" id="notes"></div>
+      <div class="empty" id="empty" hidden>
+        <div class="empty__card">
+          <span class="empty__pin" aria-hidden="true"></span>
+          <h2 id="empty-title">The board is empty</h2>
+          <p id="empty-text">No thoughts have been pinned yet. Yours could be the first.</p>
+          <button class="btn btn--primary" type="button" data-open-compose>Pin a thought</button>
+        </div>
+      </div>
+      <div class="more-wrap">
+        <button class="btn btn--ghost" id="show-more" type="button" hidden>Show more</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p><strong>How it works:</strong> you write anonymously, the moderator reads every note privately, and only approved notes are pinned here. No names, no accounts, no tracking.</p>
+    <p class="footer__small" id="footer-owner"></p>
+  </footer>
+
+  <!-- Compose dialog -->
+  <dialog class="dialog" id="compose" aria-labelledby="compose-title">
+    <form class="compose" id="compose-form" novalidate>
+      <div class="compose__paper">
+        <span class="tape" aria-hidden="true"></span>
+        <header class="compose__head">
+          <h2 id="compose-title">Pin a thought</h2>
+          <button class="icon-btn" type="button" data-close aria-label="Close">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+        </header>
+
+        <div class="closed-note" id="closed-note" hidden>
+          Submissions aren't open yet. The owner of this board hasn't connected a form backend.
+        </div>
+
+        <label class="field">
+          <span class="field__label">Your thought</span>
+          <textarea id="message" name="message" rows="6" required
+            placeholder="Write what's on your mind…"></textarea>
+          <span class="field__foot">
+            <span class="hint">Don't include names, phone numbers or anything that identifies you or others.</span>
+            <span class="counter" id="counter">0 / 600</span>
+          </span>
+        </label>
+
+        <fieldset class="field">
+          <legend class="field__label">What kind of thought is it? <span class="optional">(optional)</span></legend>
+          <div class="cat-picker" id="cat-picker"></div>
+        </fieldset>
+
+        <!-- Honeypot: humans never see or fill this -->
+        <div class="hp" aria-hidden="true">
+          <label>Leave this empty <input type="text" name="website" id="website" tabindex="-1" autocomplete="off"></label>
+        </div>
+
+        <div class="compose__actions">
+          <p class="privacy">Anonymous. Reviewed before it appears. It may not be published.</p>
+          <button class="btn btn--primary" id="submit" type="submit">Send for review</button>
+        </div>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Read dialog -->
+  <dialog class="dialog dialog--read" id="reader" aria-label="Thought">
+    <article class="reader" id="reader-body">
+      <button class="icon-btn reader__close" type="button" data-close aria-label="Close">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <span class="note__pin" aria-hidden="true"></span>
+      <p class="reader__text" id="reader-text"></p>
+      <footer class="reader__foot">
+        <span class="tag" id="reader-tag"></span>
+        <time id="reader-date"></time>
+      </footer>
+    </article>
+  </dialog>
+
+  <noscript><p class="noscript">ThoughtShare needs JavaScript to load the board.</p></noscript>
+
+  <script src="config.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

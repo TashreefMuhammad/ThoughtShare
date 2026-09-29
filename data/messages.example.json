@@ -1,0 +1,18 @@
+{
+  "updated": "2026-09-29",
+  "_note": "Sample notes for previewing the design. Open the site with ?demo to see them. Not real submissions.",
+  "messages": [
+    { "id": "demo-01", "text": "To whoever left the umbrella at the bus stop on a rainy Tuesday: I took it home, and I think of you every time it rains.", "category": "gratitude", "date": "2026-09-27", "featured": true },
+    { "id": "demo-02", "text": "I pretend to understand recursion. I understand it about 60% of the time, every time.", "category": "confession", "date": "2026-09-26", "featured": false },
+    { "id": "demo-03", "text": "Start the assignment the day you get it. Even ten minutes. Future you will write you a thank-you note.", "category": "advice", "date": "2026-09-25", "featured": false },
+    { "id": "demo-04", "text": "Why does every printer on earth know exactly when I'm late?", "category": "rant", "date": "2026-09-24", "featured": false },
+    { "id": "demo-05", "text": "Next year I want to be braver than I was this year.\nThat's the whole plan.", "category": "hope", "date": "2026-09-23", "featured": false },
+    { "id": "demo-06", "text": "Cats are just tiny landlords who never fix anything.", "category": "random", "date": "2026-09-22", "featured": false },
+    { "id": "demo-07", "text": "My mother still packs food for me when I visit, even though I'm grown and live twenty minutes away. I used to be embarrassed about it. Now I count on it.", "category": "gratitude", "date": "2026-09-21", "featured": false },
+    { "id": "demo-08", "text": "If you're reading this at 2 a.m. and can't sleep: drink some water, put the phone down after this, and remember that the problems will still be there tomorrow, but you'll be better rested to face them. That's not nothing. Most nights, that's the whole trick. And if tomorrow is hard anyway, that's fine too. You've survived every hard day so far, which is a pretty strong track record when you think about it. Be a little gentler with yourself than you were today.", "category": "advice", "date": "2026-09-20", "featured": true },
+    { "id": "demo-09", "text": "I have been learning guitar for two years and I can play exactly one song. I play it beautifully though.", "category": "confession", "date": "2026-09-19", "featured": false },
+    { "id": "demo-10", "text": "Group projects where one person does everything should come with a certificate.", "category": "rant", "date": "2026-09-18", "featured": false },
+    { "id": "demo-11", "text": "I hope the person I'm becoming would be proud of who I'm trying to be.", "category": "hope", "date": "2026-09-17", "featured": false },
+    { "id": "demo-12", "text": "<script>alert('if you see a popup, the board is unsafe')</script> — this note tests that text is never run as code.", "category": "random", "date": "2026-09-16", "featured": false }
+  ]
+}

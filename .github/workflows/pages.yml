@@ -1,0 +1,85 @@
+# Builds and publishes ThoughtShare to GitHub Pages.
+#
+# • Every push to main  → validates data/messages.json and deploys the site.
+# • "Run workflow" button (Actions tab) → optionally pulls approved thoughts
+#   from your Google Sheet first, commits them, then deploys.
+#
+# One-time setup: Settings → Pages → Build and deployment → Source: "GitHub Actions".
+# Optional sync: add repository secrets THOUGHTSHARE_ENDPOINT and THOUGHTSHARE_EXPORT_KEY.
+
+name: Publish ThoughtShare
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      sync:
+        description: "Pull approved thoughts from my Google Sheet first"
+        type: boolean
+        default: true
+  # Uncomment to sync automatically every 6 hours:
+  # schedule:
+  #   - cron: "17 */6 * * *"
+
+permissions:
+  contents: write   # lets the sync step commit data/messages.json
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Sync approved thoughts from Google Sheet
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.sync)
+        env:
+          THOUGHTSHARE_ENDPOINT: ${{ secrets.THOUGHTSHARE_ENDPOINT }}
+          THOUGHTSHARE_EXPORT_KEY: ${{ secrets.THOUGHTSHARE_EXPORT_KEY }}
+        run: node scripts/sync.mjs
+
+      - name: Validate messages.json
+        run: node scripts/check-data.mjs data/messages.json
+
+      - name: Commit synced thoughts
+        run: |
+          if git diff --quiet -- data/messages.json; then
+            echo "Nothing to commit."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/messages.json
+            git commit -m "Pin approved thoughts"
+            git push
+          fi
+
+      - name: Assemble site
+        run: |
+          mkdir -p _site
+          cp -r index.html config.js assets data .nojekyll _site/
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
