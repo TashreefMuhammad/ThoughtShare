@@ -67,7 +67,10 @@ function doPost(e) {
     if (!lock.tryLock(10000)) return json_({ ok: false, error: 'Busy — please try again.' });
     try {
       var sheet = sheet_();
-      sheet.appendRow([
+      // Not appendRow(): the pre-filled checkboxes count as "content", so appendRow
+      // would write below the last checkbox row (row 1001+). Use the first row with no ID instead.
+      var row = nextRow_(sheet);
+      sheet.getRange(row, 1, 1, HEADERS.length).setValues([[
         newId_(),
         new Date(),
         safeCell_(text),
@@ -76,7 +79,7 @@ function doPost(e) {
         false,       // Approved
         false,       // Featured
         ''
-      ]);
+      ]]);
     } finally {
       lock.releaseLock();
     }
@@ -139,20 +142,7 @@ function setupSheet() {
   sheet.setColumnWidth(COL.FEATURED, 90);
   sheet.setColumnWidth(COL.NOTES, 220);
 
-  var rows = sheet.getMaxRows() - 1;
-  sheet.getRange(2, COL.MESSAGE, rows, 1).setWrap(true).setVerticalAlignment('top');
-  sheet.getRange(2, COL.RECEIVED, rows, 1).setNumberFormat('yyyy-mm-dd hh:mm');
-  sheet.getRange(2, COL.APPROVED, rows, 2).insertCheckboxes();
-  sheet.getRange(2, COL.CATEGORY, rows, 1).setDataValidation(
-    SpreadsheetApp.newDataValidation().requireValueInList(CATEGORIES, true).setAllowInvalid(false).build()
-  );
-
-  // Approved rows turn green, featured rows gold
-  var body = sheet.getRange(2, 1, rows, HEADERS.length);
-  sheet.setConditionalFormatRules([
-    SpreadsheetApp.newConditionalFormatRule().whenFormulaSatisfied('=$G2=TRUE').setBackground('#FFF1C2').setRanges([body]).build(),
-    SpreadsheetApp.newConditionalFormatRule().whenFormulaSatisfied('=$F2=TRUE').setBackground('#DDF3E8').setRanges([body]).build()
-  ]);
+  formatRows_(sheet);
 
   if (!PropertiesService.getScriptProperties().getProperty('SYNC_KEY')) rotateSyncKey_(true);
 
@@ -208,6 +198,38 @@ function buildExport_() {
   messages.sort(function (a, b) { return b._sort - a._sort; });
   messages.forEach(function (m) { delete m._sort; });
   return { updated: Utilities.formatDate(new Date(), tz, 'yyyy-MM-dd'), messages: messages };
+}
+
+// Checkboxes, dropdown, wrapping and colours for every data row in the sheet
+function formatRows_(sheet) {
+  var rows = sheet.getMaxRows() - 1;
+  if (rows < 1) return;
+  sheet.getRange(2, COL.MESSAGE, rows, 1).setWrap(true).setVerticalAlignment('top');
+  sheet.getRange(2, COL.RECEIVED, rows, 1).setNumberFormat('yyyy-mm-dd hh:mm');
+  sheet.getRange(2, COL.APPROVED, rows, 2).insertCheckboxes();
+  sheet.getRange(2, COL.CATEGORY, rows, 1).setDataValidation(
+    SpreadsheetApp.newDataValidation().requireValueInList(CATEGORIES, true).setAllowInvalid(false).build()
+  );
+  // Approved rows turn green, featured rows gold
+  var body = sheet.getRange(2, 1, rows, HEADERS.length);
+  sheet.setConditionalFormatRules([
+    SpreadsheetApp.newConditionalFormatRule().whenFormulaSatisfied('=$G2=TRUE').setBackground('#FFF1C2').setRanges([body]).build(),
+    SpreadsheetApp.newConditionalFormatRule().whenFormulaSatisfied('=$F2=TRUE').setBackground('#DDF3E8').setRanges([body]).build()
+  ]);
+}
+
+// First row (from 2) whose ID cell is empty. Grows the sheet when it's full.
+function nextRow_(sheet) {
+  var max = sheet.getMaxRows();
+  if (max >= 2) {
+    var ids = sheet.getRange(2, COL.ID, max - 1, 1).getValues();
+    for (var i = 0; i < ids.length; i++) {
+      if (ids[i][0] === '' || ids[i][0] === null) return i + 2;
+    }
+  }
+  sheet.insertRowsAfter(max, 500);
+  formatRows_(sheet);
+  return max + 1;
 }
 
 function sheet_() {
