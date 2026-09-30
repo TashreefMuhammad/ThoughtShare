@@ -48,6 +48,7 @@
           <select id="sort">
             <option value="newest">Newest first</option>
             <option value="oldest">Oldest first</option>
+            <option value="active">Most replies</option>
             <option value="shuffle">Shuffle</option>
           </select>
         </label>
@@ -126,19 +127,46 @@
     </form>
   </dialog>
 
-  <!-- Read dialog -->
-  <dialog class="dialog dialog--read" id="reader" aria-label="Thought">
-    <article class="reader" id="reader-body">
-      <button class="icon-btn reader__close" type="button" data-close aria-label="Close">
-        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      </button>
-      <span class="note__pin" aria-hidden="true"></span>
-      <p class="reader__text" id="reader-text"></p>
-      <footer class="reader__foot">
-        <span class="tag" id="reader-tag"></span>
-        <time id="reader-date"></time>
-      </footer>
-    </article>
+  <!-- Thread dialog: the note, its replies, and a reply box -->
+  <dialog class="dialog dialog--read" id="reader" aria-label="Thought and replies">
+    <div class="reader-wrap">
+      <article class="reader" id="reader-body">
+        <button class="icon-btn reader__close" type="button" data-close aria-label="Close">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <span class="note__pin" aria-hidden="true"></span>
+        <p class="reader__text" id="reader-text"></p>
+        <footer class="reader__foot">
+          <span class="tag" id="reader-tag"></span>
+          <time id="reader-date"></time>
+        </footer>
+      </article>
+
+      <section class="thread" id="thread" aria-labelledby="thread-title">
+        <h2 class="thread__title" id="thread-title">Replies</h2>
+        <ol class="thread__list" id="thread-list"></ol>
+        <p class="thread__empty" id="thread-empty">No replies yet.</p>
+
+        <form class="thread__form" id="reply-form" novalidate>
+          <label class="field">
+            <span class="field__label">Reply anonymously</span>
+            <textarea id="reply-message" name="message" rows="3" required
+              placeholder="Add to the conversation…"></textarea>
+            <span class="field__foot">
+              <span class="hint">Replies are reviewed before they appear. No names, please.</span>
+              <span class="counter" id="reply-counter">0 / 400</span>
+            </span>
+          </label>
+          <div class="hp" aria-hidden="true">
+            <label>Leave this empty <input type="text" name="website" id="reply-website" tabindex="-1" autocomplete="off"></label>
+          </div>
+          <div class="thread__actions">
+            <button class="btn btn--primary" id="reply-submit" type="submit">Send reply for review</button>
+          </div>
+          <p class="status" id="reply-status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </div>
   </dialog>
 
   <noscript><p class="noscript">ThoughtShare needs JavaScript to load the board.</p></noscript>

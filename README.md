@@ -2,6 +2,7 @@
 
 **An anonymous notice board you can run for free on GitHub Pages.**
 Visitors pin a thought without logging in. Every note goes to *your* private Google Sheet first. Nothing appears on the board until you approve it.
+You can answer notes as the moderator, and visitors can reply anonymously, so each note can become a conversation. Replies are reviewed too.
 
 ![ThoughtShare board](assets/img/screenshot.jpg)
 
@@ -42,6 +43,7 @@ Visitors ◄──── GitHub Pages rebuilds the board from messages.json (≈
 - **GitHub Pages** hosts the board. It's a static site, so it can show notes but can't receive them.
 - **Google Apps Script**, attached to a Google Sheet, is the free "inbox". The website sends each note there.
 - **Only approved notes** ever reach the public repository. Pending and rejected notes stay in your sheet, so they never appear in the git history either.
+- **Threads:** clicking a note opens it with its replies. Visitors reply anonymously; replies land in a separate **Replies** tab and need your approval just like notes. Your own replies are labelled *Moderator*.
 
 ## What's in the repo
 
@@ -87,7 +89,7 @@ After about a minute, your board is live at `https://<your-username>.github.io/<
    - Choose your account.
    - If you see "Google hasn't verified this app", click **Advanced → Go to (project name)**. This is your own script, so it's safe.
    - Click **Allow**.
-7. The sheet now has a formatted **Submissions** tab with checkboxes and a category dropdown.
+7. The sheet now has a formatted **Submissions** tab with checkboxes and a category dropdown, and a **Replies** tab for thread replies.
 
 ### Step 4 — Publish the script as a web app
 
@@ -121,18 +123,30 @@ Commit the change. The workflow redeploys automatically. After about a minute, o
 
 ## Daily moderation
 
-In your sheet, each note arrives as a row:
+### Notes — the **Submissions** tab
 
-| ID | Received | Message | Suggested category | Category (final) | Approved | Featured | Private notes |
-|---|---|---|---|---|---|---|---|
+| ID | Received | Message | Suggested category | Category (final) | Approved | Featured | Private notes | My reply |
+|---|---|---|---|---|---|---|---|---|
 
 1. Read the message.
 2. Leave **Category (final)** blank to accept the visitor's suggestion, or pick a different one. Notes with no category go to your default category (`random`).
 3. Tick **Approved** to publish it. Tick **Featured** to pin it at the top of the board under *Pinned by the moderator*.
-4. Rejecting a note needs no action. Leave it unticked, or delete the row.
-5. To unpublish later, untick **Approved** and publish again.
+4. To answer it, type in **My reply**. The answer shows on the note's card and at the top of its thread, labelled *Moderator*.
+5. Rejecting a note needs no action. Leave it unticked, or delete the row.
+6. To unpublish later, untick **Approved** and publish again. Its replies disappear with it.
 
 Approved rows turn green and featured rows turn gold, so you can see your decisions at a glance.
+
+### Thread replies — the **Replies** tab
+
+| ID | Received | Thread ID | Message | From me | Approved | Private notes | Replying to |
+|---|---|---|---|---|---|---|---|
+
+- Visitor replies arrive here. **Replying to** shows the note they belong to, so you have context.
+- Tick **Approved** to publish a reply.
+- **To post your own message in a thread**, use the first empty row: paste the note's ID into **Thread ID**, type your **Message**, and tick **From me**. The ID and time fill in by themselves. Your own messages don't need approving.
+- Visitors can only reply to approved notes. Replies to hidden or made-up IDs are refused.
+- Thread messages appear oldest first. Visitors can link straight to a thread (the address ends in `#t=<note-id>`).
 
 ### Publishing (manual way)
 
@@ -184,6 +198,9 @@ Only categories that have at least one note show up as filter chips on the board
 | Setting | Where | Default |
 |---|---|---|
 | Max note length | `maxLength` in `config.js` **and** `MAX_LENGTH` in `Code.gs` | 600 |
+| Allow visitor replies | `allowReplies` in `config.js` **and** `ALLOW_REPLIES` in `Code.gs` | on |
+| Max reply length | `replyMaxLength` in `config.js` **and** `REPLY_MAX_LENGTH` in `Code.gs` | 400 |
+| Label on your replies | `moderatorLabel` in `config.js` | Moderator |
 | Wait between submissions (per browser) | `cooldownSeconds` in `config.js` | 60 s |
 | Notes per page before "Show more" | `pageSize` in `config.js` | 24 |
 | Board-wide flood limit | `MAX_PER_10_MIN` in `Code.gs` | 40 per 10 min |
@@ -203,28 +220,35 @@ Add it under **Settings → Pages → Custom domain**. All paths in the site are
 
 ```json
 {
-  "updated": "2026-09-29",
+  "updated": "2026-09-30",
   "messages": [
     {
-      "id": "t-260928-a1b2c",
+      "id": "t-260929-0ad8b",
       "text": "The note itself. Line breaks are kept.",
       "category": "gratitude",
-      "date": "2026-09-28",
-      "featured": false
+      "date": "2026-09-29",
+      "featured": false,
+      "reply": "Your answer as the moderator (optional).",
+      "replies": [
+        { "id": "r-260930-1a2b3", "text": "An anonymous reply.", "date": "2026-09-30", "fromOwner": false },
+        { "id": "r-260930-4c5d6", "text": "Your follow-up in the thread.", "date": "2026-09-30", "fromOwner": true }
+      ]
     }
   ]
 }
 ```
 
 - Required: `text`. Recommended: `id` (must be unique), `category`, `date` (`YYYY-MM-DD`), and `featured` (`true`/`false`).
+- Optional: `reply` (your answer) and `replies` (the thread; each needs `text`).
 - An unknown category falls back to `defaultCategory`.
-- You can also write the file by hand. The export just saves you the typing.
+- Files from older versions, without `reply`/`replies`, still work unchanged.
+- You can write the file by hand. The export just saves you the typing.
 
 ---
 
 ## Privacy and safety
 
-**What is stored:** the note, the time it arrived, and the category the visitor picked. That's all.
+**What is stored:** the note or reply, the time it arrived, the category the visitor picked, and (for replies) which note it answers. That's all.
 
 **What is not stored:** names, emails, IP addresses, cookies or device information. Apps Script doesn't pass the visitor's identity or IP to your script, so the sheet can't contain it.
 
@@ -233,10 +257,10 @@ Add it under **Settings → Pages → Custom domain**. All paths in the site are
 - People can still identify themselves in what they write. The form reminds them not to, and you're the final filter.
 
 **Built-in protections:**
-- Every note is shown with `textContent`, never as HTML. A note containing `<script>` just displays as text. The `?demo` data includes a note that tests this.
+- Every note and reply is shown with `textContent`, never as HTML. A note containing `<script>` just displays as text. The `?demo` data includes a note that tests this.
 - Text starting with `=`, `+`, `-` or `@` is stored as plain text, so a note can't become a live formula in your sheet.
 - There's a hidden "honeypot" field and a minimum time on the page, which catch simple bots.
-- The script limits total submissions per 10 minutes and ignores repeats of the same text for 6 hours.
+- The script limits total submissions (notes and replies together) per 10 minutes and ignores repeats of the same text for 6 hours.
 - The browser enforces a short cooldown between a visitor's submissions.
 
 **If you get spammed:** lower `MAX_PER_10_MIN`, or put the form behind [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/), a free CAPTCHA that doesn't track people. That requires a small change to `Code.gs` to verify the token.
@@ -255,6 +279,8 @@ Add it under **Settings → Pages → Custom domain**. All paths in the site are
 | Board shows "couldn't be loaded" | `data/messages.json` is invalid. Check the latest run in the **Actions** tab. |
 | The workflow fails at "deploy" | Settings → Pages → Source must be **GitHub Actions**, not "Deploy from a branch". |
 | Board didn't update after a push | Wait 1–2 minutes and hard-refresh. The page fetches the JSON with `no-cache`, but the CDN can take a moment. |
+| Reply form says "This thread isn't open for replies" | The note isn't ticked **Approved** in the sheet (or was unapproved after the board was published). |
+| No **Replies** tab | You're on an older `Code.gs`. Paste the latest one, run **Set up / repair sheet**, and deploy a new version. |
 | Sync step says "refused" | The sync key changed. Copy it again with **Show sync key** and update the secret. |
 
 ---
@@ -263,7 +289,11 @@ Add it under **Settings → Pages → Custom domain**. All paths in the site are
 
 **Is it really free?** Yes. GitHub Pages, GitHub Actions for public repos, Google Sheets and Apps Script are all free at this scale.
 
-**Can visitors see pending notes?** No. The public web app only accepts new notes. Reading requires the sync key, and even that returns only approved notes.
+**Can visitors see pending notes?** No. The public web app only accepts new notes and replies. Reading requires the sync key, and even that returns only approved content.
+
+**Can I tell if a reply is from the person who wrote the note?** No. Everyone in a thread is anonymous; only your own messages are marked.
+
+**I set up an older version. Will updating break my sheet?** No. Paste the new `Code.gs`, run **Set up / repair sheet**, and deploy a new version. Setup only adds the **My reply** column and the **Replies** tab. It never removes rows or changes your ticks.
 
 **Can I moderate from my phone?** Yes. Use the Google Sheets app to tick boxes. To publish, run the workflow from the GitHub mobile app or github.com.
 

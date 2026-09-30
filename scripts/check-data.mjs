@@ -26,6 +26,16 @@ list.forEach((m, i) => {
   }
   if (m.date != null && isNaN(new Date(m.date))) fail(`${where} has an invalid "date" (${m.date}). Use YYYY-MM-DD.`);
   if (m.featured != null && typeof m.featured !== "boolean") fail(`${where} "featured" must be true or false.`);
+  if (m.reply != null && typeof m.reply !== "string") fail(`${where} "reply" must be text.`);
+  if (m.replies != null) {
+    if (!Array.isArray(m.replies)) fail(`${where} "replies" must be a list.`);
+    m.replies.forEach((r, j) => {
+      const w = `${where}.replies[${j}]`;
+      if (!r || typeof r.text !== "string" || !r.text.trim()) fail(`${w} has no "text".`);
+      if (r.date != null && isNaN(new Date(r.date))) fail(`${w} has an invalid "date" (${r.date}). Use YYYY-MM-DD.`);
+      if (r.fromOwner != null && typeof r.fromOwner !== "boolean") fail(`${w} "fromOwner" must be true or false.`);
+    });
+  }
 });
 
 console.log(`${FILE}: ${list.length} message(s), valid.`);

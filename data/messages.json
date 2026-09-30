@@ -2,25 +2,36 @@
   "updated": "2026-09-30",
   "messages": [
     {
-      "id": "t-260929-e8a68",
-      "text": "In the night, no control",
-      "category": "rant",
+      "id": "t-260929-f9876",
+      "text": "Sir ekta biriyani akhono pai",
+      "category": "hope",
       "date": "2026-09-30",
-      "featured": false
+      "featured": false,
+      "reply": "পাওনা থাকলে এসে নিয়ে যান, কেন নিবেন না?!"
+    },
+    {
+      "id": "t-260929-5ec05",
+      "text": "How to stay motivated in this sector????",
+      "category": "advice",
+      "date": "2026-09-30",
+      "featured": false,
+      "reply": "কোন sector?"
     },
     {
       "id": "t-260929-14e54",
       "text": "Sir buffet khawan🐥",
       "category": "hope",
       "date": "2026-09-30",
-      "featured": false
+      "featured": false,
+      "reply": "আর্থিক ক্ষমতা থেকে বিতাড়িত"
     },
     {
       "id": "t-260929-eab0f",
       "text": "Sir embedded er submission date ta iktu pechan😭💔",
       "category": "hope",
       "date": "2026-09-30",
-      "featured": false
+      "featured": false,
+      "reply": "নাহ"
     },
     {
       "id": "t-260929-c45fe",
@@ -34,7 +45,8 @@
       "text": "Sir khawailen na",
       "category": "random",
       "date": "2026-09-30",
-      "featured": false
+      "featured": false,
+      "reply": "টাকা নাই"
     }
   ]
 }
