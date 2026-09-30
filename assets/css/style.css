@@ -15,9 +15,11 @@
   --shadow-note: 0 1px 1px rgba(60, 35, 10, .18), 0 8px 18px -6px rgba(60, 35, 10, .45);
   --shadow-lift: 0 2px 2px rgba(60, 35, 10, .15), 0 22px 34px -12px rgba(60, 35, 10, .55);
   --radius: 14px;
-  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
-  --font-hand: "Kalam", "Segoe Print", "Bradley Hand", cursive;
-  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Fraunces", "Hind Siliguri", Georgia, "Times New Roman", serif;
+  /* Latin font first, Bangla second: the browser uses Galada / Hind Siliguri only
+     for Bangla letters, and only downloads them when Bangla text is on the page. */
+  --font-hand: "Kalam", "Galada", "Segoe Print", "Bradley Hand", cursive;
+  --font-ui: "Inter", "Hind Siliguri", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   color-scheme: light;
 }
 
