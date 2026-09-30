@@ -15,11 +15,17 @@
   --shadow-note: 0 1px 1px rgba(60, 35, 10, .18), 0 8px 18px -6px rgba(60, 35, 10, .45);
   --shadow-lift: 0 2px 2px rgba(60, 35, 10, .15), 0 22px 34px -12px rgba(60, 35, 10, .55);
   --radius: 14px;
-  --font-display: "Fraunces", "Hind Siliguri", Georgia, "Times New Roman", serif;
-  /* Latin font first, Bangla second: the browser uses Galada / Hind Siliguri only
-     for Bangla letters, and only downloads them when Bangla text is on the page. */
+  --font-display: "Fraunces", "Baloo Da 2", Georgia, "Times New Roman", serif;
+  /* Four styled font pairs (English, Bangla). Nothing falls to a system font
+     unless Google Fonts can't load at all. Bangla fonts are only downloaded
+     when Bangla text is on the page.
+       --font-hand : visitors' notes and replies — Kalam / Galada
+       --font-mod  : your replies and your name   — Caveat / Atma (a different "pen")
+       --font-ui   : buttons, chips, labels, dates — Nunito / Baloo Da 2
+       --font-display : headings                   — Fraunces / Baloo Da 2 */
   --font-hand: "Kalam", "Galada", "Segoe Print", "Bradley Hand", cursive;
-  --font-ui: "Inter", "Hind Siliguri", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mod: "Caveat", "Atma", "Segoe Print", cursive;
+  --font-ui: "Nunito", "Baloo Da 2", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   color-scheme: light;
 }
 
@@ -40,6 +46,15 @@ body {
 main { flex: 1; width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 16px; }
 button, input, select, textarea { font: inherit; color: inherit; }
 :focus-visible { outline: 3px solid #2A5CA8; outline-offset: 2px; border-radius: 6px; }
+
+/* Anything containing Bangla: Bangla font first, for English letters too,
+   so mixed lines like "কোন sector?" stay in one style. Set by app.js. */
+[lang="bn"] {
+  --font-hand: "Galada", "Kalam", cursive;
+  --font-mod: "Atma", "Caveat", cursive;
+  --font-ui: "Baloo Da 2", "Nunito", system-ui, sans-serif;
+  --font-display: "Baloo Da 2", "Fraunces", serif;
+}
 
 .visually-hidden, .hp {
   position: absolute !important; width: 1px; height: 1px; overflow: hidden;
@@ -192,7 +207,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .note__more { font-family: var(--font-ui); font-size: .8rem; font-weight: 600; color: var(--note-ink); margin: -6px 0 12px; }
 .note__foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: .78rem; color: rgba(47, 38, 32, .7); }
 .tag {
-  display: inline-flex; align-items: center; gap: 6px; font-weight: 600; letter-spacing: .02em;
+  display: inline-flex; align-items: center; gap: 6px; font-weight: 800; letter-spacing: .06em;
   text-transform: uppercase; font-size: .7rem; color: var(--note-ink);
 }
 .tag::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
@@ -304,16 +319,26 @@ textarea:focus { outline: 3px solid rgba(42, 92, 168, .35); border-color: #2A5CA
   background: rgba(255, 255, 255, .6); border-left: 3px solid var(--note-ink);
 }
 .note__answer-who, .entry__who {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-size: .68rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--font-ui); font-size: .78rem; font-weight: 700; letter-spacing: .01em;
+}
+/* Your name reads like a signature */
+.note__answer-who, .entry--owner .entry__who {
+  font-family: var(--font-mod); font-size: 1.12rem; font-weight: 700; letter-spacing: 0; line-height: 1.1;
 }
 .note__answer-who { color: var(--note-ink); margin-bottom: 2px; }
 .note__answer-text {
-  margin: 0; font-size: .9rem; line-height: 1.45; color: #2F2620; white-space: pre-line; overflow-wrap: anywhere;
+  margin: 0; font-family: var(--font-mod); font-size: 1.22rem; font-weight: 500; line-height: 1.3;
+  color: #2F2620; white-space: pre-line; overflow-wrap: anywhere;
   display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
 }
 .note__meta { display: inline-flex; align-items: center; gap: 10px; }
 .note__talk { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; color: var(--note-ink); }
+
+/* Atma is much larger than Caveat at the same size — even them out */
+.note__answer-text[lang="bn"] { font-size: 1rem; line-height: 1.5; }
+.entry--owner .entry__text[lang="bn"] { font-size: 1.06rem; line-height: 1.55; }
+.note__answer-who[lang="bn"], .entry--owner .entry__who[lang="bn"] { font-size: .95rem; }
 
 /* Thread (inside the reader dialog) */
 .thread {
@@ -331,7 +356,7 @@ textarea:focus { outline: 3px solid rgba(42, 92, 168, .35); border-color: #2A5CA
 .entry__text { margin: 0; font-family: var(--font-hand); font-size: 1.08rem; line-height: 1.5; white-space: pre-line; overflow-wrap: anywhere; }
 .entry--owner { background: #FFF6F3; border-color: #F1C7BD; border-left: 4px solid var(--accent); }
 .entry--owner .entry__who { color: var(--accent); }
-.entry--owner .entry__text { font-family: var(--font-ui); font-size: .98rem; }
+.entry--owner .entry__text { font-family: var(--font-mod); font-size: 1.3rem; font-weight: 500; line-height: 1.35; }
 .thread__form { margin-top: 18px; padding-top: 16px; border-top: 1px dashed var(--line); }
 .thread__form .field { margin-bottom: 12px; }
 .thread__form textarea { min-height: 90px; font-size: 1.05rem; }

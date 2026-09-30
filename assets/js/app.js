@@ -17,13 +17,15 @@
     maxLength: 600,
     allowReplies: true,
     replyMaxLength: 400,
-    moderatorLabel: "Moderator",
+    moderatorLabel: "",     // empty → uses ownerName, then "Moderator"
     cooldownSeconds: 60,
     pageSize: 24,
     categories: [],
     defaultCategory: "random"
   };
   var cfg = Object.assign({}, DEFAULTS, window.THOUGHTSHARE_CONFIG || {});
+  // Your replies are signed with your name unless you set a different label
+  var MOD_NAME = String(cfg.moderatorLabel || cfg.ownerName || "Moderator").trim();
   var CATS = {};
   cfg.categories.forEach(function (c) { CATS[c.id] = c; });
   if (!CATS[cfg.defaultCategory]) {
@@ -111,6 +113,15 @@
   }
   var ICON_BUBBLE = "M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z";
   var ICON_CHECK = "M5 12.5l4.5 4.5L19 7.5";
+  // Text containing any Bangla is marked lang="bn" so the CSS can render the
+  // whole line in the Bangla font (which also has English letters). Otherwise
+  // "কোন sector?" would mix two different-looking fonts.
+  var BANGLA = /[\u0980-\u09FF]/;
+  function markLang(elm, text) {
+    if (BANGLA.test(text || "")) elm.setAttribute("lang", "bn");
+    else elm.removeAttribute("lang");
+    return elm;
+  }
   function catOf(id) { return CATS[id] || CATS[cfg.defaultCategory]; }
   function storageGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
   function storageSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) { /* private mode */ } }
@@ -336,16 +347,17 @@
 
     art.appendChild(node("span", "note__pin"));
     var long = m.text.length > CLAMP_AT;
-    art.appendChild(node("p", "note__text" + (long ? " note__text--clamp" : ""), m.text));
+    art.appendChild(markLang(node("p", "note__text" + (long ? " note__text--clamp" : ""), m.text), m.text));
     if (long) art.appendChild(node("p", "note__more", "Read the whole note →"));
 
     if (m.reply) {
       var ans = node("div", "note__answer");
       var who = node("span", "note__answer-who");
       who.appendChild(icon(ICON_CHECK, 12));
-      who.appendChild(document.createTextNode(cfg.moderatorLabel));
+      who.appendChild(document.createTextNode(MOD_NAME));
+      markLang(who, MOD_NAME);
       ans.appendChild(who);
-      ans.appendChild(node("p", "note__answer-text", m.reply));
+      ans.appendChild(markLang(node("p", "note__answer-text", m.reply), m.reply));
       art.appendChild(ans);
     }
 
@@ -474,7 +486,8 @@
     var head = node("div", "entry__head");
     var who = node("span", "entry__who");
     if (fromOwner) who.appendChild(icon(ICON_CHECK, 12));
-    who.appendChild(document.createTextNode(fromOwner ? cfg.moderatorLabel : "Anonymous"));
+    who.appendChild(document.createTextNode(fromOwner ? MOD_NAME : "Anonymous"));
+    if (fromOwner) markLang(who, MOD_NAME);
     head.appendChild(who);
     if (date) {
       var t = node("time", null, fmtDate(date));
@@ -482,7 +495,7 @@
       head.appendChild(t);
     }
     li.appendChild(head);
-    li.appendChild(node("p", "entry__text", text));
+    li.appendChild(markLang(node("p", "entry__text", text), text));
     return li;
   }
 
@@ -505,11 +518,13 @@
     el.readerBody.style.setProperty("--note-bg", cat.color);
     el.readerBody.style.setProperty("--note-ink", cat.ink);
     el.readerText.textContent = m.text;
+    markLang(el.readerText, m.text);
     el.readerTag.textContent = cat.label;
     el.readerDate.textContent = fmtDate(m.date);
     el.readerDate.dateTime = isoDay(m.date);
     renderThread(m);
     el.replyForm.reset();
+    markLang(el.replyMessage, "");
     setReplyStatus("");
     updateReplyCounter();
     setHashKey("t", m.id);
@@ -592,6 +607,7 @@
     if (e.target.closest("[data-open-compose]")) openCompose();
   });
   el.message.addEventListener("input", function () {
+    markLang(el.message, el.message.value);
     updateCounter();
     if (el.status.classList.contains("status--err")) setStatus("");
   });
@@ -627,6 +643,7 @@
   function noteDone() {
     storageSet(NOTE_COOLDOWN_KEY, String(Date.now()));
     el.form.reset();
+    markLang(el.message, "");
     buildPicker();
     updateCounter();
     setStatus("Sent. Thank you. If it's approved, it'll be pinned here soon.", "ok");
@@ -640,6 +657,7 @@
   }
 
   el.replyMessage.addEventListener("input", function () {
+    markLang(el.replyMessage, el.replyMessage.value);
     updateReplyCounter();
     if (el.replyStatus.classList.contains("status--err")) setReplyStatus("");
   });
@@ -672,6 +690,7 @@
   function replyDone() {
     storageSet(REPLY_COOLDOWN_KEY, String(Date.now()));
     el.replyForm.reset();
+    markLang(el.replyMessage, "");
     updateReplyCounter();
     setReplyStatus("Sent for review. If it's approved, it'll appear in this thread.", "ok");
   }

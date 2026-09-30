@@ -43,7 +43,7 @@ Visitors ◄──── GitHub Pages rebuilds the board from messages.json (≈
 - **GitHub Pages** hosts the board. It's a static site, so it can show notes but can't receive them.
 - **Google Apps Script**, attached to a Google Sheet, is the free "inbox". The website sends each note there.
 - **Only approved notes** ever reach the public repository. Pending and rejected notes stay in your sheet, so they never appear in the git history either.
-- **Threads:** clicking a note opens it with its replies. Visitors reply anonymously; replies land in a separate **Replies** tab and need your approval just like notes. Your own replies are labelled *Moderator*.
+- **Threads:** clicking a note opens it with its replies. Visitors reply anonymously; replies land in a separate **Replies** tab and need your approval just like notes. Your own replies are signed with your name (`ownerName`).
 
 ## What's in the repo
 
@@ -200,7 +200,7 @@ Only categories that have at least one note show up as filter chips on the board
 | Max note length | `maxLength` in `config.js` **and** `MAX_LENGTH` in `Code.gs` | 600 |
 | Allow visitor replies | `allowReplies` in `config.js` **and** `ALLOW_REPLIES` in `Code.gs` | on |
 | Max reply length | `replyMaxLength` in `config.js` **and** `REPLY_MAX_LENGTH` in `Code.gs` | 400 |
-| Label on your replies | `moderatorLabel` in `config.js` | Moderator |
+| Name on your replies | `moderatorLabel` in `config.js` (empty = your `ownerName`) | your `ownerName` |
 | Wait between submissions (per browser) | `cooldownSeconds` in `config.js` | 60 s |
 | Notes per page before "Show more" | `pageSize` in `config.js` | 24 |
 | Board-wide flood limit | `MAX_PER_10_MIN` in `Code.gs` | 40 per 10 min |
