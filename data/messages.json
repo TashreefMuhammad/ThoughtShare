@@ -1,6 +1,45 @@
 {
-  "updated": "2026-10-01",
+  "updated": "2026-10-02",
   "messages": [
+    {
+      "id": "t-261002-524c4",
+      "text": "Decent teaching, clear explanations, and a friendly-positive attitude. I really like the way you talk, it's so sarcastic. You really made the lab experience genuinely enjoyable, Sir \n\nNow, gift me a Ps5. Wanna play GTA VI",
+      "category": "random",
+      "date": "2026-10-02",
+      "featured": false,
+      "reply": "Thank you for oilious efforts, but it was a wasted one."
+    },
+    {
+      "id": "t-261001-be0a1",
+      "text": "Sir, amar CGPA 2.8",
+      "category": "confession",
+      "date": "2026-10-02",
+      "featured": false,
+      "reply": "তো আই কিত্তাম?"
+    },
+    {
+      "id": "t-261001-49b5a",
+      "text": "miss korbo apnake",
+      "category": "gratitude",
+      "date": "2026-10-01",
+      "featured": false
+    },
+    {
+      "id": "t-261001-47a3f",
+      "text": "sir, apnar ammu ekhono sokaler  breakfast na korle jhamela koren?",
+      "category": "random",
+      "date": "2026-10-01",
+      "featured": false,
+      "reply": "আগের চেয়ে কম, কিন্তু করে"
+    },
+    {
+      "id": "t-261001-d26ef",
+      "text": "Southeast theke ber hoye ki kora uchit sir? I anyone has only high cgpa?",
+      "category": "advice",
+      "date": "2026-10-01",
+      "featured": false,
+      "reply": "English টা ঠিক করা"
+    },
     {
       "id": "t-260930-c6086",
       "text": "Sir Cse 1102 এর presentation submission এর date কয়েকদিন বাড়ান",
