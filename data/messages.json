@@ -1,13 +1,58 @@
 {
-  "updated": "2026-10-02",
+  "updated": "2026-10-16",
   "messages": [
+    {
+      "id": "t-261015-77165",
+      "text": "Sir, in our first cls, u told that a girl cried a lot because she got u as her faculty and wanted to drop that course and that girl was me.. but after completing the course I have to say that I got one of the best faculty..and one more thing u could be an amazing stand-up comedian..",
+      "category": "gratitude",
+      "date": "2026-10-15",
+      "featured": false,
+      "reply": "Can't say you're the first one who suggested :3"
+    },
+    {
+      "id": "t-261015-a8186",
+      "text": "কিছু পোলাপান চাটাচাটি করে সেটা মেবি আপনি বুঝতে পারেন না স্যার। সরি।  গ্রুপে যেগুলা হুদাই আজাইরা কথা বলে ওরাই আসল কালপ্রিট।  নাম গুলা খুবি ক্লিয়ার। লাস্টের মেসেজ কয়েকটা দেখলেই বোঝা যাবে। কেন বললাম জানি না বাট খুবি খারাপ লাগে এমন উলঙ্গ চাটা চাটি।",
+      "category": "random",
+      "date": "2026-10-15",
+      "featured": false,
+      "reply": "Um ... I actually don't pay much attention to that. For time pass those are good, but honestly, I don't kind of give enough attention to those, those are same as the comments that are made during class about my face and body."
+    },
+    {
+      "id": "t-261015-73e6c",
+      "text": "আপনার কোর্স করার আগে পর্যন্ত আপনাকে অনেক রাগী মানুষ হিসেবে ই চিনতাম।  কোর্স করার পর পুরো ধারনাই চেন্জ হয়ে। আপনার ফ্রেন্ডলি বিহেভিয়ার এবং ওভারঅল সব কিছু মিলিয়ে কোর্সটি উপভোগ করেছি। ধন্যবাদ স্যার। \nএবং আরেকবার আসসালামু আলাইকুম স্যার🫡🤍",
+      "category": "gratitude",
+      "date": "2026-10-15",
+      "featured": false,
+      "reply": "Walaikumussalam"
+    },
+    {
+      "id": "t-261015-c1359",
+      "text": "Sir apnar teaching style xoss..eto freely chill kore porano jay apnar theke sikhlam..age tuition e khub serious thaktam. apnake dekhe motivated hoye ekhon ekdom chill thaki...and giye boli ajkeo kichu porabona 😆",
+      "category": "gratitude",
+      "date": "2026-10-15",
+      "featured": false
+    },
+    {
+      "id": "t-261015-700f1",
+      "text": "Dear Sir, \nI deserved that result 3.00... but i was bit confused about my mid term marks... I have that belief that you will give the actual deserving marks without any partiality and nepotism all along,, that's why I'm okay with my result.",
+      "category": "gratitude",
+      "date": "2026-10-15",
+      "featured": false
+    },
+    {
+      "id": "t-261004-47fc1",
+      "text": "আমার সব থেকে পছন্দের একজন স্যার। আপনাকে মনে রাখবো সবসময়। আপনার কথা বলার স্টাইল খুবই ইউনিক এবং পড়ানো টাও। আপনাকে অনেক Miss করব স্যার। 🥺",
+      "category": "gratitude",
+      "date": "2026-10-04",
+      "featured": false
+    },
     {
       "id": "t-261002-524c4",
       "text": "Decent teaching, clear explanations, and a friendly-positive attitude. I really like the way you talk, it's so sarcastic. You really made the lab experience genuinely enjoyable, Sir \n\nNow, gift me a Ps5. Wanna play GTA VI",
       "category": "random",
       "date": "2026-10-02",
       "featured": false,
-      "reply": "Thank you for oilious efforts, but it was a wasted one."
+      "reply": "Thank you for efforts, but it was a wasted one."
     },
     {
       "id": "t-261001-be0a1",
@@ -15,7 +60,15 @@
       "category": "confession",
       "date": "2026-10-02",
       "featured": false,
-      "reply": "তো আই কিত্তাম?"
+      "reply": "তো আই কিত্তাম?",
+      "replies": [
+        {
+          "id": "r-261015-bc547",
+          "text": "Amr cg 3.93",
+          "date": "2026-10-15",
+          "fromOwner": false
+        }
+      ]
     },
     {
       "id": "t-261001-49b5a",
